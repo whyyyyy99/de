@@ -23,9 +23,9 @@ def housing_predict():
                 "Median_Age": int(request.form.get("Median_Age")),  # getting input with name = pgc in HTML form
                 "Tot_Rooms": int(request.form.get("Tot_Rooms")),
                 "Tot_Bedrooms": int(request.form.get("Tot_Bedrooms")),
+                "Population": int(request.form.get("Population")),
                 "Households": int(request.form.get("Households")),
                 "Latitude": float(request.form.get("Latitude")),
-                "Population": int(request.form.get("Population")),
                 "Longitude": float(request.form.get("Longitude")),
                 "Distance_to_coast": float(request.form.get("Distance_to_coast")),
                 "Distance_to_LA": float(request.form.get("Distance_to_LA")),
