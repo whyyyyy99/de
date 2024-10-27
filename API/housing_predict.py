@@ -38,8 +38,6 @@ class HousingPredictor:
         logging.debug(prediction_input)
         if self.model is None:
             try:
-                #model_repo = os.environ['MODEL_REPO']
-                #file_path = os.path.join(model_repo, "xgboost.pkl")
                 file_path = 'lr_model.pkl'
                 with open(file_path, 'rb') as file_path:    
                     self.model = pickle.load(file_path)
