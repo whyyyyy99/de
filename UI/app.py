@@ -22,9 +22,9 @@ def housing_predict():
                 "Median_Income": float(request.form.get("Median_Income")),  # getting input with name = ntp in HTML form
                 "Median_Age": int(request.form.get("Median_Age")),  # getting input with name = pgc in HTML form
                 "Tot_Rooms": int(request.form.get("Tot_Rooms")),
-                "Tot_Bedrooms": float(request.form.get("Tot_Bedrooms")),
-                "Households": float(request.form.get("Households")),
-                "Latitude": int(request.form.get("Latitude")),
+                "Tot_Bedrooms": int(request.form.get("Tot_Bedrooms")),
+                "Households": int(request.form.get("Households")),
+                "Latitude": float(request.form.get("Latitude")),
                 "Population": int(request.form.get("Population")),
                 "Longitude": float(request.form.get("Longitude")),
                 "Distance_to_coast": float(request.form.get("Distance_to_coast")),
