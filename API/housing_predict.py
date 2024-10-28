@@ -35,8 +35,8 @@ def download_model(self):
     client = storage.Client(project=project_id)
     bucket = client.bucket(model_repo)
     blob = bucket.blob(model_name)
-    blob.download_to_filename('local_model.h5')
-    self.model = load_model('local_model.h5')
+    blob.download_to_filename('lr_model.pkl')
+    self.model = load_model('lr_model.pkl')
     return jsonify({'message': " the model was downloaded"}), 200
 class HousingPredictor:
     def __init__(self):
