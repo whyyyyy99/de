@@ -1,19 +1,15 @@
 {
   "steps": [
     {
-       "name": "gcr.io/cloud-builders/gsutil",
-       "args": [
-           "cp",
-		   "gs://${_MODEL_REPO}/lr_model.pkl",
-           "./API/lr_model.pkl"
-        ]
+      "name": "gcr.io/cloud-builders/gsutil",
+      "args": ["cp", "gs://${_MODEL_REPO}/lr_model.pkl", "./API/lr_model.pkl"]
     },
     {
       "name": "gcr.io/cloud-builders/docker",
       "args": [
         "build",
         "-t",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-api:0.0.1",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-api",
         "./API"
       ]
     },
@@ -22,7 +18,7 @@
       "args": [
         "build",
         "-t",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-ui:0.0.1",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-ui",
         "./UI"
       ]
     },
@@ -30,14 +26,14 @@
       "name": "gcr.io/cloud-builders/docker",
       "args": [
         "push",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-api:0.0.1"
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-api"
       ]
     },
     {
       "name": "gcr.io/cloud-builders/docker",
       "args": [
         "push",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-ui:0.0.1"
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-ui"
       ]
     },
     {
@@ -48,7 +44,7 @@
         "deploy",
         "prediction-api",
         "--image",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-api:0.0.1",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/prediction-api",
         "--region",
         "us-central1",
         "--platform",
@@ -65,13 +61,8 @@
     },
     {
       "name": "ubuntu",
-      "args": [
-        "sleep",
-        "60"
-      ],
-      "waitFor": [
-        "prediction-api-deploy"
-      ],
+      "args": ["sleep", "60"],
+      "waitFor": ["prediction-api-deploy"],
       "id": "sleep-delay"
     },
     {
@@ -79,11 +70,9 @@
       "entrypoint": "/bin/sh",
       "args": [
         "-c",
-        "gcloud run services list --platform managed | grep  https: | head -1 | awk '{print $4}' > /workspace/api_url.text"
+        "gcloud run services list --platform managed | grep 'https:.*api' | head -1 | awk '{print $4}' > /workspace/api_url.text"
       ],
-      "waitFor": [
-        "sleep-delay"
-      ],
+      "waitFor": ["sleep-delay"],
       "id": "api-url-extraction"
     },
     {
@@ -91,19 +80,15 @@
       "entrypoint": "/bin/sh",
       "args": [
         "-c",
-        "gcloud run deploy prediction-ui --image ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/group4de/prediction-ui:0.0.1 --set-env-vars PREDICTOR_API=$(cat /workspace/api_url.text)/housing_predict/ --region us-central1 --platform managed --port 5000 --cpu 2 --memory 4G --allow-unauthenticated"
+        "gcloud run deploy prediction-ui --image ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/prediction-ui --set-env-vars PREDICTOR_API=$(cat /workspace/api_url.text)/housing_predict/ --region us-central1 --platform managed --port 5000 --cpu 2 --memory 4G --allow-unauthenticated"
       ],
-      "waitFor": [
-        "api-url-extraction"
-      ]
+      "waitFor": ["api-url-extraction"]
     }
   ],
   "artifacts": {
     "objects": {
       "location": "gs://${_TEMP_REPO}/",
-      "paths": [
-        "/workspace/api_url.text"
-      ]
+      "paths": ["/workspace/api_url.text"]
     }
   },
   "options": {
