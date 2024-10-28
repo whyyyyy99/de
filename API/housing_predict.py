@@ -28,8 +28,16 @@ import pandas as pd
 
 # Convert the dictionary to a DataFrame
 #df = pd.DataFrame(data)
-
-
+def download_model(self):
+    project_id = os.environ.get('PROJECT_ID', 'Specified environment variable is not set.')
+    model_repo = os.environ.get('MODEL_REPO', 'Specified environment variable is not set.')
+    model_name = os.environ.get('MODEL_NAME', 'Specified environment variable is not set.')
+    client = storage.Client(project=project_id)
+    bucket = client.bucket(model_repo)
+    blob = bucket.blob(model_name)
+    blob.download_to_filename('local_model.h5')
+    self.model = load_model('local_model.h5')
+    return jsonify({'message': " the model was downloaded"}), 200
 class HousingPredictor:
     def __init__(self):
         self.model = None
